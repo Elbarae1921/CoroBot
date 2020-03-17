@@ -146,11 +146,11 @@ client.on("message", async message => {
 
                 if (countries.includes(args[1])) {
                     const data = await Corona.getCountryDataArray(args[1]);
-                    var cases = data[0].replace(/ /g, "") == " " ? "" : `> ${data[0]}`;
-                    cases += data[1].replace(/ /g, "") == "" ? " " : ` (${data[1]})`;
-                    var deaths = data[2].replace(/ /g, "") == " " ? "" : `> ${data[2]}`;
-                    deaths += data[3].replace(/ /g, "") == "" ? " " : ` (${data[3]})`;
-                    var recovered = data[4].replace(/ /g, "") == " " ? "" : `> ${data[4]}`;
+                    var cases = data[0].replace(/ /g, "") == "" ? " " : `> ${data[0]}`;
+                    cases += data[1].replace(/ /g, "") == "" ? "" : ` (${data[1]})`;
+                    var deaths = data[2].replace(/ /g, "") == "" ? " " : `> ${data[2]}`;
+                    deaths += data[3].replace(/ /g, "") == "" ? "" : ` (${data[3]})`;
+                    var recovered = data[4].replace(/ /g, "") == "" ? " " : `> ${data[4]}`;
                     var active = data[5].replace(/ /g, "") == "" ? " " : `> ${data[5]}`;
                     var serious = data[6].replace(/ /g, "") == "" ? " " : `> ${data[6]}`;
                     const reply = new MessageEmbed()
