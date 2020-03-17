@@ -146,12 +146,19 @@ client.on("message", async message => {
 
                 if (countries.includes(args[1])) {
                     const data = await Corona.getCountryDataArray(args[1]);
+                    var cases = data[0] == "" ? "" : `> ${data[0]}`;
+                    cases += data[1] == "" ? "" : ` (${data[1]})`;
+                    var deaths = data[2] == "" ? "" : `> ${data[2]}`;
+                    deaths += data[3] == "" ? "" : ` (${data[3]})`;
+                    var recovered = data[4] == "" ? "" : `> ${data[4]}`;
+                    var active = data[5] == "" ? "" : `> ${data[5]}`;
+                    var serious = data[6] == "" ? "" : `> ${data[6]}`;
                     const reply = new MessageEmbed()
                         .setColor(message.guild.me.displayHexColor)
                         .setTitle(`Coronavirus stats in ${args[1]}`)
                         .setTimestamp()
                         .setFooter("worldometers.info", client.user.displayAvatarURL)
-                        .addFields([{ name: "Total Cases:", value: `> ${data[0]} (${data[1]})` }, { name: "Total Deaths:", value: `> ${data[2]} (${data[3]})` }, { name: "Total Recovered:", value: "> "+data[4] }, { name: "Active Cases:", value: "> "+data[5] }, { name: "Serious/Critical Cases:", value: "> "+data[6] }]);
+                        .addFields([{ name: "Total Cases:", value: cases }, { name: "Total Deaths:", value: deaths }, { name: "Total Recovered:", value: recovered }, { name: "Active Cases:", value: active }, { name: "Serious/Critical Cases:", value: serious }]);
                     message.channel.send(reply);
                 }
                 else {
