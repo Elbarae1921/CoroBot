@@ -151,7 +151,7 @@ client.on("message", async message => {
                         .setTitle(`Coronavirus stats in ${args[1]}`)
                         .setTimestamp()
                         .setFooter("worldometers.info", client.user.displayAvatarURL)
-                        .addFields([{ name: "Total Cases:", value: `${data[0]} (${data[1]})` }, { name: "Total Deaths:", value: `${data[2]} (${data[3]})` }, { name: "Total Recovered:", value: data[4] }, { name: "Active Cases:", value: data[5] }, { name: "Serious/Critical Cases:", value: data[6] }]);
+                        .addFields([{ name: "Total Cases:", value: `> ${data[0]} (${data[1]})` }, { name: "Total Deaths:", value: `> ${data[2]} (${data[3]})` }, { name: "Total Recovered:", value: "> "+data[4] }, { name: "Active Cases:", value: "> "+data[5] }, { name: "Serious/Critical Cases:", value: "> "+data[6] }]);
                     message.channel.send(reply);
                 }
                 else {
@@ -165,7 +165,7 @@ client.on("message", async message => {
                     .setTitle("Coronavirus stats worldwide")
                     .setTimestamp()
                     .setFooter("worldometers.info", client.user.displayAvatarURL)
-                    .addFields([{ name: "Coronavirus Cases:", value: data[0] }, { name: "Deaths:", value: data[1] }, { name: "Recovered:", value: data[2] }]);
+                    .addFields([{ name: "Coronavirus Cases:", value: "> "+data[0] }, { name: "Deaths:", value: "> "+data[1] }, { name: "Recovered:", value: "> "+data[2] }]);
                 message.channel.send(reply);
             }
         }
