@@ -21,18 +21,19 @@ Corona.getOldData().then(data => {
 });
 
 const dataListener = async () => {
-    console.log(oldData);
+    //console.log(oldData);
     var changedCases = await Corona.getNewCasesArray(oldData);
     var guild = client.guilds.cache.get('688106273467662438');
     var channel = guild.channels.cache.get('689207932927213579');
     var changed = false;
     for (let [key, value] of changedCases) {
         changed = true;
+        var color = value.includes("recovery") ? "#00FF00" : value.includes("case") ? "#FFFF00" : "	#FF0000";
         channel.send(new MessageEmbed()
             .setTimestamp()
-            .setColor(guild.me.displayHexColor)
+            .setColor(color)
             .setFooter("worldometers.info", client.user.displayAvatarURL)
-            .setDescription(`${value} new case(s) in ${key}`)
+            .setDescription(`${value} in ${key}`)
         );
     }
     if (changed)
@@ -144,8 +145,9 @@ client.on("message", async message => {
                 const countries = await Corona.countriesArray();
                 console.log(countries);
 
-                if (countries.includes(args[1])) {
-                    const data = await Corona.getCountryDataArray(args[1]);
+                if (countries.map(country => {return country.toLowerCase().replace(/[^a-z]/gi, "")}).includes(args[1].toLowerCase().replace(/[^a-z]/gi, ""))) {
+                    const reqCountry = countries.find(country => country.toLowerCase().replace(/[^a-z]/gi, "") == args[1].toLowerCase().replace(/[^a-z]/gi, ""));
+                    const data = await Corona.getCountryDataArray(reqCountry);
                     var cases = data[0].replace(/ /g, "") == "" ? "> 0" : `> ${data[0]}`;
                     cases += data[1].replace(/ /g, "") == "" ? " " : ` (${data[1]})`;
                     var deaths = data[2].replace(/ /g, "") == "" ? "> 0" : `> ${data[2]}`;
@@ -153,9 +155,11 @@ client.on("message", async message => {
                     var recovered = data[4].replace(/ /g, "") == "" ? "> 0" : `> ${data[4]}`;
                     var active = data[5].replace(/ /g, "") == "" ? "> 0" : `> ${data[5]}`;
                     var serious = data[6].replace(/ /g, "") == "" ? "> 0" : `> ${data[6]}`;
+
+                    var color = parseInt(data[5].replace(/,/g, "")) == 0 || active == "> 0" ? "#00ff00" : parseInt(data[5].replace(/,/g, "")) < 100 ? "#D3D3D3" : parseInt(data[5].replace(/,/g, "")) < 1000 ? "#FFFF00" : "#FF0000";
                     const reply = new MessageEmbed()
-                        .setColor(message.guild.me.displayHexColor)
-                        .setTitle(`Coronavirus stats in ${args[1]}`)
+                        .setColor(color)
+                        .setTitle(`Coronavirus stats in ${reqCountry}`)
                         .setTimestamp()
                         .setFooter("worldometers.info", client.user.displayAvatarURL)
                         .addFields([{ name: "Total Cases:", value: cases }, { name: "Total Deaths:", value: deaths }, { name: "Total Recovered:", value: recovered }, { name: "Active Cases:", value: active }, { name: "Serious/Critical Cases:", value: serious }]);

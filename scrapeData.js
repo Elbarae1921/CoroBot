@@ -4,13 +4,14 @@ const $ = require("cheerio");
 
 
 const url = "https://www.worldometers.info/coronavirus/";
+const selector = "#main_table_countries_today tbody";
 
 const countriesArray = () => {
     return new Promise(resolve => {
         console.log("scraping the page...");
         rp(url)
             .then(html => {
-                const data = $("#main_table_countries tbody", html);
+                const data = $(selector, html);
                 //console.log(data.get(0).children.filter(x => x.hasOwnProperty('children')).length);
                 const countriesData = data.get(0).children.filter(x => x.hasOwnProperty('children')).map(x => {
                     if (x.children[1].children.length < 2) {
@@ -53,7 +54,7 @@ const getCountryDataArray = async country => {
         rp(url)
             .then(html => {
                 const dataArray = [];
-                const data = $("#main_table_countries tbody", html);
+                const data = $(selector, html);
                 console.log(data.get(0).children.filter(x => x.hasOwnProperty('children')).length);
                 const vals = data.get(0).children.filter(x => x.hasOwnProperty('children')).filter(x => {
                     if (x.children[1].children.length < 2) {
@@ -92,12 +93,12 @@ const mapCountriesData = async countries => {
         rp(url)
             .then(html => {
                 const dataMap = new Map();
-                const data = $("#main_table_countries tbody", html);
+                const data = $(selector, html);
                 var vals = data.get(0).children.filter(x => x.hasOwnProperty('children'));
                 var i = 0;
                 for(let country of countries)
                 {
-                    dataMap.set(country, vals[i].children[3].children[0].data)
+                    dataMap.set(country, [vals[i].children[17].children[0].data, vals[i].children[9].children[0].data, vals[i].children[13].children[0].data]);
                     /*dataArray.push(vals[0].children[7].children[0].data);
                     dataArray.push(vals[0].children[9].children[0].data);
                     dataArray.push(vals[0].children[11].children[0].data);
@@ -135,8 +136,14 @@ const getNewCasesArray = async oldData => {
         for(let [key, value] of oldData)
         {
             var newValue = newData.get(key);
-            if(value != newValue)
-                ChangedCases.set(key, (parseInt(newValue.replace(/,/g, "")) - parseInt(value.replace(/,/g, ""))).toString());
+            if(parseInt(newValue[0].replace(/,/g, "")) > parseInt(value[0].replace(/,/g, "")))
+                ChangedCases.set(key, `${(parseInt(newValue[0].replace(/,/g, "")) - parseInt(value[0].replace(/,/g, ""))).toString()} new case(s)`);
+            
+            if(parseInt(newValue[1].replace(/,/g, "")) > parseInt(value[1].replace(/,/g, "")))
+                ChangedCases.set(key, `${(parseInt(newValue[1].replace(/,/g, "")) - parseInt(value[1].replace(/,/g, ""))).toString()} new death(s)`);
+            
+            if(parseInt(newValue[2].replace(/,/g, "")) > parseInt(value[2].replace(/,/g, "")))
+                ChangedCases.set(key, `${(parseInt(newValue[2].replace(/,/g, "")) - parseInt(value[2].replace(/,/g, ""))).toString()} new recovery(ies)`);
         } 
         resolve(ChangedCases);
     })
