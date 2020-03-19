@@ -14,11 +14,11 @@ const countriesArray = () => {
                 const data = $(selector, html);
                 //console.log(data.get(0).children.filter(x => x.hasOwnProperty('children')).length);
                 const countriesData = data.get(0).children.filter(x => x.hasOwnProperty('children')).map(x => {
-                    if (x.children[1].children.length < 2) {
+                    if (!x.children[1].children[0].hasOwnProperty("children")) {
                         return x.children[1].children[0].data.trim();
                     }
                     else {
-                        return x.children[1].children[1].children[0].data.trim();
+                        return x.children[1].children[0].children[0].data.trim();
                     }
                 });
                 console.log("scraping done!");
@@ -57,14 +57,14 @@ const getCountryDataArray = async country => {
                 const data = $(selector, html);
                 console.log(data.get(0).children.filter(x => x.hasOwnProperty('children')).length);
                 const vals = data.get(0).children.filter(x => x.hasOwnProperty('children')).filter(x => {
-                    if (x.children[1].children.length < 2) {
+                    if (!x.children[1].children[0].hasOwnProperty("children")) {
                         if(x.children[1].children[0].data.trim() == country)
                             return true;
                         else
                             return false
                     }
                     else {
-                        if(x.children[1].children[1].children[0].data.trim() == country)
+                        if(x.children[1].children[0].children[0].data.trim() == country)
                             return true;
                         else
                             return false;
@@ -72,13 +72,13 @@ const getCountryDataArray = async country => {
                 });
                 //console.log(vals[0].children[11].children[0].data);
                 //console.log(`Total Cases : ${vals[0].children[3].children[0].data}\nNew Cases : ${vals[0].children[7].children[0].data}\nTotal Deaths : ${vals[0].children[9].children[0].data}\nNew Deaths : ${vals[0].children[11].children[0].data}\nTotal Recovered ${vals[0].children[13].children[0].data}\nActive Cases : ${vals[0].children[17].children[0].data}\nSerious/Critical Cases : ${vals[0].children[19].children[0].data}`);
-                dataArray.push(vals[0].children[3].children[0].data);
-                dataArray.push(vals[0].children[7].children[0].data);
-                dataArray.push(vals[0].children[9].children[0].data);
-                dataArray.push(vals[0].children[11].children[0].data);
-                dataArray.push(vals[0].children[13].children[0].data);
-                dataArray.push(vals[0].children[17].children[0].data);
-                dataArray.push(vals[0].children[19].children[0].data);
+                dataArray.push(vals[0].children[3].hasOwnProperty("children") ? vals[0].children[3].children.length > 0 ?  vals[0].children[3].children[0].data : "" : "");
+                dataArray.push(vals[0].children[5].hasOwnProperty("children") ? vals[0].children[5].children.length > 0 ?  vals[0].children[5].children[0].data : "" : "");
+                dataArray.push(vals[0].children[7].hasOwnProperty("children") ? vals[0].children[7].children.length > 0 ?  vals[0].children[7].children[0].data : "" : "");
+                dataArray.push(vals[0].children[9].hasOwnProperty("children") ? vals[0].children[9].children.length > 0 ?  vals[0].children[9].children[0].data : "" : "");
+                dataArray.push(vals[0].children[11].hasOwnProperty("children") ? vals[0].children[11].children.length > 0 ?  vals[0].children[11].children[0].data : "" : "");
+                dataArray.push(vals[0].children[13].hasOwnProperty("children") ? vals[0].children[13].children.length > 0 ?  vals[0].children[13].children[0].data : "" : "");
+                dataArray.push(vals[0].children[15].hasOwnProperty("children") ? vals[0].children[15].children.length > 0 ?  vals[0].children[17].children[0].data : "" : "");
                 resolve(dataArray);
             })
             .catch(err => {
@@ -98,13 +98,12 @@ const mapCountriesData = async countries => {
                 var i = 0;
                 for(let country of countries)
                 {
-                    dataMap.set(country, [vals[i].children[17].children[0].data, vals[i].children[9].children[0].data, vals[i].children[13].children[0].data]);
-                    /*dataArray.push(vals[0].children[7].children[0].data);
-                    dataArray.push(vals[0].children[9].children[0].data);
-                    dataArray.push(vals[0].children[11].children[0].data);
-                    dataArray.push(vals[0].children[13].children[0].data);
-                    dataArray.push(vals[0].children[17].children[0].data);
-                    dataArray.push(vals[0].children[19].children[0].data);*/
+                    dataMap.set(country, [vals[0].children[13].hasOwnProperty("children") ? vals[0].children[13].children.length > 0 ?  vals[0].children[13].children[0].data : 0 : 0, vals[0].children[7].hasOwnProperty("children") ? vals[0].children[7].children.length > 0 ?  vals[0].children[7].children[0].data : 0 : 0, vals[0].children[11].hasOwnProperty("children") ? vals[0].children[11].children.length > 0 ?  vals[0].children[11].children[0].data : "" : ""]);
+                    /*vals[0].children[3].children
+                    vals[0].children[7].children
+                    vals[0].children[11].children
+                    vals[0].children[13].children
+                    vals[0].children[15].children*/
                     i++;
                 }
                 console.log("scraping done!");
