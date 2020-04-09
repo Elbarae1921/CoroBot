@@ -3,3 +3,5 @@ package-lock.json
 .vscode/
 test.js
 commands.todo
+.env
+Procfile
