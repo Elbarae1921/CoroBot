@@ -51,11 +51,6 @@ client.on("ready", () => {
 
     console.log(`I'm online, and my name is ${client.user.username}`);
 
-    setInterval(() => {
-        var guild = client.guilds.cache.get('688106273467662438');
-        guild.channels.cache.get('688106274323431451').send("A daily reminder that Safwane is gay");
-    }, 1000 * 60 * 60 * 24);
-
     setInterval(dataListener, 1000 * 60 * 2);
 });
 
@@ -76,7 +71,7 @@ client.on("message", async message => {
     }
 
     if (cmd == "whoisgay") {
-        message.channel.send(`<@217359303286325249>`);
+        message.channel.send(`<@217359303286325249>`); //might wanna change this ID one or just remove the command
     }
 
     if (cmd == "say") {
@@ -231,4 +226,4 @@ client.on("message", async message => {
     }
 });
 
-client.login(process.env.TOKEN);
+client.login(process.env.TOKEN); // don't forget to set your bot's token in the .env file
