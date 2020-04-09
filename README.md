@@ -21,7 +21,7 @@ Definitely not the best bot out there for this kind of thing, but it gets the jo
 
 (Presuming you already have NodeJS and npm installed)
 
-First you'll need to create your own discord bot [here](https://discordapp.com/developers/applications). When you've created the bot add it to your server(s), make sure you copy the token because you'll need it.
+First you'll need to create your own discord bot [here](https://discordapp.com/developers/applications). When you've created the bot add it to your server (might need admin privilege for some misc commands), make sure you copy the token because you'll need it.
 
 Back to our project. After you've cloned this repo and stored it somewhere in your computed, open a cmd and navigate to the project, then run `npm install` which might take a few minutes.
 
