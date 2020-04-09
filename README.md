@@ -7,9 +7,8 @@ Basically a bot that fetches covid-19 stats from the worldometers.com/coronaviru
 
 <h3>Commands example</h3>
 
-<pre>?corona stats</pre> returns an embedded message with covid-19 stats worldwide
-<br/>
-<pre>?corona stats <country></pre> returns an embedded message with covid-19 stats in <country>
+Returns an embedded message with covid-19 stats worldwide <pre>?corona stats</pre>
+Returns an embedded message with covid-19 stats in <country> <pre>?corona stats <country></pre>
 
 <br/><br/>
 
