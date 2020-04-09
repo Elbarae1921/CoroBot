@@ -5,12 +5,13 @@ Basically a bot that fetches covid-19 stats from the worldometers.com/coronaviru
 
 
 
-<h4>Commands example</h4>
+<h3>Commands example</h3>
 
 <pre>?corona stats</pre> returns an embedded message with covid-19 stats worldwide
+<br/>
 <pre>?corona stats <country></pre> returns an embedded message with covid-19 stats in <country>
 
-
+<br/><br/>
 
 
 The bot might stop functionning correctly if the website got redesigned, it already did many times, but it doesn't take much to get it back up and running.
