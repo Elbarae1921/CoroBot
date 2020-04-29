@@ -147,11 +147,23 @@ const getNewCasesArray = async oldData => {
         resolve(ChangedCases);
     })
 }
-getCountryDataArray("Morocco");
+
+const lastUpdated = async () => {
+    return new Promise(resolve => {
+        rp(url)
+            .then(html => {
+                const div = $(".content-inner", html);
+                const lu = div.get(0).children[9].children[0].data;
+                resolve(new Date(lu.split(' ').slice(2).join(' ').trim()));
+            });
+    });
+}
+
 module.exports = {
-    countriesArray: countriesArray,
-    getDataArray: getDataArray,
-    getCountryDataArray: getCountryDataArray,
-    getOldData: getOldData,
-    getNewCasesArray: getNewCasesArray
+    countriesArray,
+    getDataArray,
+    getCountryDataArray,
+    getOldData,
+    getNewCasesArray,
+    lastUpdated
 }

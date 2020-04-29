@@ -1,10 +1,7 @@
 const { Client, MessageEmbed } = require('discord.js');
 const { config } = require("dotenv");
 
-const rp = require("request-promise");
-const $ = require("cheerio");
-
-const Corona = require("./scrapeData");
+const { countriesArray, getDataArray, getCountryDataArray, getOldData, getNewCasesArray, lastUpdated } = require("./scrapeData");
 
 const client = new Client({
     disableEveryone: true
@@ -16,13 +13,13 @@ config({
 
 var oldData;
 
-Corona.getOldData().then(data => {
+getOldData().then(data => {
     oldData = data;
 });
 
 const dataListener = async () => {
     //console.log(oldData);
-    var changedCases = await Corona.getNewCasesArray(oldData);
+    var changedCases = await getNewCasesArray(oldData);
     var guild = client.guilds.cache.get('688106273467662438');
     var channel = guild.channels.cache.get('689207932927213579');
     var changed = false;
@@ -37,7 +34,7 @@ const dataListener = async () => {
         );
     }
     if (changed)
-        oldData = await Corona.getOldData();
+        oldData = await getOldData();
 }
 
 client.on("ready", () => {
@@ -142,12 +139,12 @@ client.on("message", async message => {
         else if(args[0] === "stats")
         {
             if(args.length > 1) {
-                const countries = await Corona.countriesArray();
+                const countries = await countriesArray();
                 console.log(countries);
 
                 if (countries.map(country => {return country.toLowerCase().replace(/[^a-z]/gi, "")}).includes(args[1].toLowerCase().replace(/[^a-z]/gi, ""))) {
                     const reqCountry = countries.find(country => country.toLowerCase().replace(/[^a-z]/gi, "") == args[1].toLowerCase().replace(/[^a-z]/gi, ""));
-                    const data = await Corona.getCountryDataArray(reqCountry);
+                    const data = await getCountryDataArray(reqCountry);
                     var cases = data[0].replace(/ /g, "") == "" ? "> 0" : `> ${data[0]}`;
                     cases += data[1].replace(/ /g, "") == "" ? " " : ` (${data[1]})`;
                     var deaths = data[2].replace(/ /g, "") == "" ? "> 0" : `> ${data[2]}`;
@@ -160,7 +157,7 @@ client.on("message", async message => {
                     const reply = new MessageEmbed()
                         .setColor(color)
                         .setTitle(`Coronavirus stats in ${reqCountry}`)
-                        .setTimestamp()
+                        .setTimestamp(await lastUpdated())
                         .setFooter("worldometers.info", client.user.displayAvatarURL)
                         .addFields([{ name: "Total Cases:", value: cases }, { name: "Total Deaths:", value: deaths }, { name: "Total Recovered:", value: recovered }, { name: "Active Cases:", value: active }, { name: "Serious/Critical Cases:", value: serious }]);
                     message.channel.send(reply);
@@ -170,11 +167,11 @@ client.on("message", async message => {
                 }
             }
             else {
-                const data = await Corona.getDataArray();
+                const data = await getDataArray();
                 const reply = new MessageEmbed()
                     .setColor(message.guild.me.displayHexColor)
                     .setTitle("Coronavirus stats worldwide")
-                    .setTimestamp()
+                    .setTimestamp(await lastUpdated())
                     .setFooter("worldometers.info", client.user.displayAvatarURL)
                     .addFields([{ name: "Coronavirus Cases:", value: "> "+data[0] }, { name: "Deaths:", value: "> "+data[1] }, { name: "Recovered:", value: "> "+data[2] }]);
                 message.channel.send(reply);
@@ -190,11 +187,11 @@ client.on("message", async message => {
             message.channel.send(reply);
         }
 
-        /*const countries = await Corona.countriesArray();
+        /*const countries = await countriesArray();
         console.log(countries);
 
         if (countries.includes(args[0])) {
-            const data = await Corona.getCountryDataArray(args[0]);
+            const data = await getCountryDataArray(args[0]);
             const reply = new MessageEmbed()
                 .setColor(message.guild.me.displayHexColor)
                 .setTitle(`Coronavirus stats in ${args[0]}`)
@@ -206,7 +203,7 @@ client.on("message", async message => {
         else {
             message.reply("either that country is safe, or it doesn't exist 🤔");
         }
-        const data = await Corona.getDataArray();
+        const data = await getDataArray();
             const reply = new MessageEmbed()
                 .setColor(message.guild.me.displayHexColor)
                 .setTitle("Coronavirus stats worldwide")
