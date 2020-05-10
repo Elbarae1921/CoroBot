@@ -65,8 +65,8 @@ client.on("message", async message => {
     if (!message.guild) return;
     if (!message.content.startsWith(prefix)) return;
 
-    const args = message.content.slice(prefix.length).trim().split(/ +/g);
-    const cmd = args.shift().toLowerCase();
+    const args = message.content.slice(prefix.length).trim().split(/ +/g).map(x => x.toLowerCase());
+    const cmd = args.shift();
 
     if (cmd === "ping") {
         const msg = await message.channel.send("🏓 Pinging...");
@@ -104,7 +104,10 @@ client.on("message", async message => {
 
     if (cmd === "corona") {
 
-        if(args[0] === "whatis") {
+        if(args[0] === "api"){
+            message.channel.send("");
+        }
+        else if(args[0] === "whatis") {
             const reply = new MessageEmbed()
                 .setColor(message.guild.me.displayHexColor)
                 .setTitle(`What is coronavirus?`)
