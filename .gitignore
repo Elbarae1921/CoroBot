@@ -3,4 +3,4 @@ package-lock.json
 .vscode/
 test.js
 commands.todo
-.env_sample
+.env
