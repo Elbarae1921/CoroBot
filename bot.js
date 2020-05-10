@@ -100,7 +100,10 @@ client.on("message", async message => {
 
     if (cmd === "corona") {
 
-        if(args[0] === "whatis") {
+        if(args[0] === "sourcecode") {
+            message.channel.send("https://github.com/Elbarae1921/CoroBot");
+        }
+        else if(args[0] === "whatis") {
             const reply = new MessageEmbed()
                 .setColor(message.guild.me.displayHexColor)
                 .setTitle(`What is coronavirus?`)
