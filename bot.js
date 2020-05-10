@@ -105,7 +105,7 @@ client.on("message", async message => {
     if (cmd === "corona") {
 
         if(args[0] === "api"){
-            message.channel.send("");
+            message.channel.send("http://api19covid.herokuapp.com/");
         }
         else if(args[0] === "whatis") {
             const reply = new MessageEmbed()
