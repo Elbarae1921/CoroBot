@@ -41,10 +41,7 @@ const getCountryData = async country => {
 const mapCountriesData = async () => {
     try {
         const res = await axios.get(`${API}/map`);
-        const map = new Map();
-        for(let [key, value] of res.data) {
-            map.set(key, value);
-        }
+        const map = new Map(res.data);
         return map;    
     } 
     catch (error) {
