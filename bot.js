@@ -32,12 +32,14 @@ const dataListener = async () => {
         subs.forEach(sub => {
             let guild = client.guilds.cache.get(sub.guild);
             let channel = guild.channels.cache.get(sub.channel);
-            channel.send(new MessageEmbed()
-                .setTimestamp()
-                .setColor(color)
-                .setFooter("worldometers.info", client.user.displayAvatarURL)
-                .setDescription(`${value} in ${key}`)
-            );
+            if(channel && typeof channel == "object") {
+                channel.send(new MessageEmbed()
+                    .setTimestamp()
+                    .setColor(color)
+                    .setFooter("worldometers.info", client.user.displayAvatarURL)
+                    .setDescription(`${value} in ${key}`)
+                );
+            }
         });
     }
     if (changed)
@@ -108,7 +110,7 @@ client.on("message", async message => {
         }
     }
 
-    if(cmd === "news") {
+    if(cmd === "subscribe") {
         if(args[0]) {
             const chId = args[0].replace(/[<>#]/g, '');
             const channel = message.guild.channels.cache.get(chId);
@@ -294,7 +296,7 @@ client.on("message", async message => {
                 {name: "?ping", value: "checks bot responsivness"},
                 {name: "?say (embed) [text to say]", value: "tells the bot what text to say, embed is optional"},
                 {name: "?corona", value: "type ?corona for more information on the command"},
-                {name: "?news [text-channel]", value: "Set a text channel for coronavirus new cases/deaths/recoveries notifications"}
+                {name: "?subscribe [text-channel]", value: "Set a text channel for coronavirus new cases/deaths/recoveries notifications"}
             );
         message.channel.send(help);
     }
