@@ -21,7 +21,8 @@ mapCountriesData().then(data => {
 const dataListener = async () => {
     //console.log(oldData);
     console.log("---------------------listening start-----------------------");
-    var changedCases = await getNewCasesArray(oldData);
+    var newCasesArray = await getNewCasesArray(oldData);
+    var changedCases = newCasesArray.ChangedCases;
     const buffer = fs.readFileSync("channels.json");
     const subs = JSON.parse(buffer);
     var changed = false;
@@ -40,7 +41,7 @@ const dataListener = async () => {
         });
     }
     if (changed)
-        oldData = await getOldData();
+        oldData = newCasesArray.newData;
     console.log("---------------------listening done------------------------");
 }
 

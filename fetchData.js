@@ -69,7 +69,7 @@ const getNewCasesArray = async oldData => {
             if(newValue[2] > value[2])
                 ChangedCases.set(key, `${newValue[2] - value[2]} new recovery(ies)`);
         }
-        resolve(ChangedCases);
+        resolve({newData, ChangedCases});
     });
 }
 
