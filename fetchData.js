@@ -56,16 +56,19 @@ const getNewCasesArray = async oldData => {
         const ChangedCases = new Map();
         for(let [key, value] of oldData)
         {
-            var newValue = newData.get(key);
-            if(parseInt(newValue[0].replace(/,/g, "")) > parseInt(value[0].replace(/,/g, "")))
-                ChangedCases.set(key, `${(parseInt(newValue[0].replace(/,/g, "")) - parseInt(value[0].replace(/,/g, ""))).toString()} new case(s)`);
+            value = value.map(x => parseInt(x.replace(/[, ]/g, "")));
+
+            var newValue = newData.get(key).map(x => parseInt(x.replace(/[, ]/g, "")));
+
+            if(newValue[0] > value[0])
+                ChangedCases.set(key, `${newValue[0] - value[0]} new case(s)`);
             
-            if(parseInt(newValue[1].replace(/,/g, "")) > parseInt(value[1].replace(/,/g, "")))
-                ChangedCases.set(key, `${(parseInt(newValue[1].replace(/,/g, "")) - parseInt(value[1].replace(/,/g, ""))).toString()} new death(s)`);
+            if(newValue[1] > value[1])
+                ChangedCases.set(key, `${newValue[1] - value[1]} new death(s)`);
             
-            if(parseInt(newValue[2].replace(/,/g, "")) > parseInt(value[2].replace(/,/g, "")))
-                ChangedCases.set(key, `${(parseInt(newValue[2].replace(/,/g, "")) - parseInt(value[2].replace(/,/g, ""))).toString()} new recovery(ies)`);
-        } 
+            if(newValue[2] > value[2])
+                ChangedCases.set(key, `${newValue[2] - value[2]} new recovery(ies)`);
+        }
         resolve(ChangedCases);
     });
 }

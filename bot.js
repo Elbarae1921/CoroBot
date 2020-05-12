@@ -1,5 +1,6 @@
 const { Client, MessageEmbed } = require('discord.js');
 const { config } = require("dotenv");
+const fs = require('fs');
 
 const { countriesArray, getData, getCountryData, getOldData, getNewCasesArray, mapCountriesData } = require("./fetchData");
 
@@ -21,18 +22,22 @@ const dataListener = async () => {
     //console.log(oldData);
     console.log("---------------------listening start-----------------------");
     var changedCases = await getNewCasesArray(oldData);
-    var guild = client.guilds.cache.get('688106273467662438');
-    var channel = guild.channels.cache.get('689207932927213579');
+    const buffer = fs.readFileSync("channels.json");
+    const subs = JSON.parse(buffer);
     var changed = false;
     for (let [key, value] of changedCases) {
         changed = true;
         var color = value.includes("recovery") ? "#00FF00" : value.includes("case") ? "#FFFF00" : "	#FF0000";
-        channel.send(new MessageEmbed()
-            .setTimestamp()
-            .setColor(color)
-            .setFooter("worldometers.info", client.user.displayAvatarURL)
-            .setDescription(`${value} in ${key}`)
-        );
+        subs.forEach(sub => {
+            let guild = client.guilds.cache.get(sub.guild);
+            let channel = guild.channels.cache.get(sub.channel);
+            channel.send(new MessageEmbed()
+                .setTimestamp()
+                .setColor(color)
+                .setFooter("worldometers.info", client.user.displayAvatarURL)
+                .setDescription(`${value} in ${key}`)
+            );
+        });
     }
     if (changed)
         oldData = await getOldData();
