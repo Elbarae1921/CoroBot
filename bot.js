@@ -1,4 +1,4 @@
-const { Client, MessageEmbed } = require('discord.js');
+const { Client, MessageEmbed, Permissions } = require('discord.js');
 const { config } = require("dotenv");
 const fs = require('fs');
 
@@ -106,6 +106,62 @@ client.on("message", async message => {
         else {
             message.channel.send(args.join(" "));
         }
+    }
+
+    if(cmd === "news") {
+        if(args[0]) {
+            const chId = args[0].replace(/[<>#]/g, '');
+            const channel = message.guild.channels.cache.get(chId);
+            if(channel && typeof channel === "object") {
+                if(channel.type !== "text") {
+                    message.channel.send("The channel you provided is not a text channel.");
+                }
+                else {
+                    const perm = new Permissions(message.guild.me.permissionsIn(channel).bitfield);
+                    if(perm.has("SEND_MESSAGES")) {
+                        fs.readFile("channels.json", (err, data) => {
+                            if(err) {
+                                console.log(err);
+                                message.reply("There has been an error, please try again later.");
+                            }
+                            else {
+                                const subs = JSON.parse(data);
+                                const newSub = {guild: message.guild.id, channel: chId}
+                                const exists = subs.some(sub => sub.guild == newSub.guild && sub.channel == newSub.channel);
+                                if(exists) {
+                                    message.channel.send("The channel is already in the subscribers list.");
+                                }
+                                else {
+                                    subs.push(newSub);
+                                    fs.writeFile("channels.json", JSON.stringify(subs), err => {
+                                        if(err) {
+                                            console.log(err);
+                                            message.reply("There has been an error, please try again later.");
+                                        }
+                                        else {
+                                            message.reply("The channel has been added to the news subscribers list. From now on you'll start recieving news in there.");
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    }
+                    else {
+                        message.channel.send("I don't have permission to send messages to the specified channel.");
+                    }
+                }
+            }
+            else {
+                message.channel.send("Please provide a valid channel id.");
+            }
+        }
+        else {
+            message.channel.send("Please specify a text channel.");
+        }
+        
+        // console.log(channel);
+        // let perm = new Permissions(message.guild.me.permissionsIn(channel).bitfield)
+        // console.log(perm.has('SEND_MESSAGES'));
     }
 
     if (cmd === "corona") {
@@ -237,7 +293,8 @@ client.on("message", async message => {
             .addFields(
                 {name: "?ping", value: "checks bot responsivness"},
                 {name: "?say (embed) [text to say]", value: "tells the bot what text to say, embed is optional"},
-                {name: "?corona", value: "type ?corona for more information on the command"}
+                {name: "?corona", value: "type ?corona for more information on the command"},
+                {name: "?news [text-channel]", value: "Set a text channel for coronavirus new cases/deaths/recoveries notifications"}
             );
         message.channel.send(help);
     }
