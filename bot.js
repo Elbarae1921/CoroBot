@@ -256,7 +256,7 @@ client.on("message", async message => {
                 .setTitle("Coronavirus command")
                 .setTimestamp()
                 .setFooter(client.user.username, client.user.displayAvatarURL)
-                .addFields([{ name: "?corona", value: "shows help on how to use the command" }, { name: "?corona whatis", value: "what is coronavirus?" }, { name: "?corona symptoms", value: "a list of possible symptoms" }, { name: "?corona prevent", value: "how to prevent the covid-19" }, { name: "?corona cure", value: "news about the covid-19 cure" }, { name: "?corona stats", value: "covid-19 statistics (cases/deaths/recoveries) worldwide" }, { name: "?corona stats [country]", value: "detailed statistics on the covid-19 spreading in the given country" }]);
+                .addFields([{ name: "?corona", value: "shows help on how to use the command" }, { name: "?corona whatis", value: "what is coronavirus?" }, { name: "?corona symptoms", value: "a list of possible symptoms" }, { name: "?corona prevent", value: "how to prevent the covid-19" }, { name: "?corona cure", value: "news about the covid-19 cure" }, { name: "?corona stats", value: "covid-19 statistics (cases/deaths/recoveries) worldwide" }, { name: "?corona stats [country]", value: "detailed statistics on the covid-19 spreading in the given country" }, { name: "?corona api", value: "Get url of the api used by the bot" }]);
             message.channel.send(reply);
         }
 
@@ -296,7 +296,8 @@ client.on("message", async message => {
                 {name: "?ping", value: "checks bot responsivness"},
                 {name: "?say (embed) [text to say]", value: "tells the bot what text to say, embed is optional"},
                 {name: "?corona", value: "type ?corona for more information on the command"},
-                {name: "?subscribe [text-channel]", value: "Set a text channel for coronavirus new cases/deaths/recoveries notifications"}
+                {name: "?subscribe [text-channel]", value: "Set a text channel for coronavirus new cases/deaths/recoveries notifications"},
+                {name: "?sourcecode", value: "Link to the bot's github repo"}
             );
         message.channel.send(help);
     }
