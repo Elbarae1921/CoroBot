@@ -166,6 +166,47 @@ client.on("message", async message => {
         // console.log(perm.has('SEND_MESSAGES'));
     }
 
+    if(cmd === "unsubscribe") {
+        if(args[0]) {
+            const chId = args[0].replace(/[<>#]/g, '');
+            const channel = message.guild.channels.cache.get(chId);
+            if(channel && typeof channel === "object") {
+                fs.readFile("channels.json", (err, data) => {
+                    if(err) {
+                        console.log(err);
+                        message.reply("There has been an error, please try again later.");
+                    }
+                    else {
+                        const subs = JSON.parse(data);
+                        const sub = {guild: message.guild.id, channel: chId};
+                        const exists = subs.filter(s => s.guild === sub.guild && s.channel === sub.channel);
+                        if(exists.length) {
+                            const newSubs = subs.filter(s => s.guild !== sub.guild && s.channel !== sub.channel);
+                            fs.writeFile("channels.json", JSON.stringify(newSubs), err => {
+                                if(err) {
+                                    console.log(err);
+                                    message.reply("There has been an error, please try again later.");
+                                }
+                                else {
+                                    message.reply("The channel has been removed from the subscribers list.");
+                                }
+                            })
+                        }
+                        else {
+                            message.channel.send("This channel is not in the list.");
+                        }
+                    }
+                })
+            }
+            else {
+                message.channel.send("Please provide a valid channel id.");
+            }
+        }
+        else {
+            message.channel.send("Please specify text channel.");
+        }
+    }
+
     if (cmd === "corona") {
 
         if(args[0] === "api"){
