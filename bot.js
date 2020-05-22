@@ -1,4 +1,5 @@
-const { Client, MessageEmbed, Permissions } = require('discord.js');
+const { Client, MessageEmbed, Permissions, MessageAttachment } = require('discord.js');
+const getGraph = require("./getGraph");
 const { config } = require("dotenv");
 const fs = require('fs');
 
@@ -68,7 +69,7 @@ client.on("ready", () => {
 
 client.on("message", async message => {
     const prefix = "?";
-
+    
     if (message.author.bot) return;
     if (!message.guild) return;
     if (!message.content.startsWith(prefix)) return;
@@ -289,6 +290,18 @@ client.on("message", async message => {
                     .setFooter("worldometers.info", client.user.displayAvatarURL)
                     .addFields([{ name: "Coronavirus Cases:", value: "> "+data.confirmed }, { name: "Deaths:", value: "> "+data.recoveries }, { name: "Recovered:", value: "> "+data.deaths }]);
                 message.channel.send(reply);
+            }
+        }
+        else if(args[0] === "chart") {
+
+            const old = await message.channel.send("Creating the chart...");
+            try {
+                await getGraph(old, message.channel, MessageAttachment);
+            } 
+            catch (error) {
+                console.log("Error during chart creation : ", error);
+                if(old.deletable) old.delete();
+                message.channel.send("There has been an error, please try again later.");
             }
         }
         else {
