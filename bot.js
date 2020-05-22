@@ -27,14 +27,16 @@ const dataListener = async () => {
     const buffer = fs.readFileSync("channels.json");
     const subs = JSON.parse(buffer);
     var changed = false;
+    const promises = [];
     for (let [key, value] of changedCases) {
         changed = true;
         var color = value.includes("recovery") ? "#00FF00" : value.includes("case") ? "#FFFF00" : "	#FF0000";
-        subs.forEach(sub => {
+        
+        subs.map(sub => {
             let guild = client.guilds.cache.get(sub.guild);
             let channel = guild.channels.cache.get(sub.channel);
             if(channel && typeof channel == "object") {
-                channel.send(new MessageEmbed()
+                return channel.send(new MessageEmbed()
                     .setTimestamp()
                     .setColor(color)
                     .setFooter("worldometers.info", client.user.displayAvatarURL)
@@ -42,6 +44,8 @@ const dataListener = async () => {
                 );
             }
         });
+
+        Promise.all(promises).catch(rej => console.log("A problem was encountered when sending news to a subscribed channel : ", rej));
     }
     if (changed)
         oldData = newCasesArray.newData;
@@ -69,7 +73,7 @@ client.on("ready", () => {
 
 client.on("message", async message => {
     const prefix = "?";
-    
+
     if (message.author.bot) return;
     if (!message.guild) return;
     if (!message.content.startsWith(prefix)) return;
