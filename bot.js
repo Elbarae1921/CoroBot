@@ -13,6 +13,13 @@ config({
     path: __dirname + "/.env"
 });
 
+let prefixes;
+
+fs.readFile("prefixes.json", (err, data) => {
+    if(err) console.log(err);
+    else prefixes = JSON.parse(data);
+})
+
 var oldData;
 
 mapCountriesData().then(data => {
@@ -72,7 +79,7 @@ client.on("ready", () => {
 });
 
 client.on("message", async message => {
-    const prefix = "?";
+    const prefix = prefixes[message.guild.id] || "?";
 
     if (message.author.bot) return;
     if (!message.guild) return;
@@ -96,6 +103,8 @@ client.on("message", async message => {
     }
 
     if (cmd === "say") {
+        if(!message.member.hasPermission("MANAGE_GUILD")) return message.reply("You don't have enough permission for this command.");
+
         if (message.deletable) message.delete();
 
         if (args.length < 1) return message.reply("Nothing to say?").then(m => m.delete({ timeout: 5000 }));
@@ -115,7 +124,22 @@ client.on("message", async message => {
         }
     }
 
+    if(cmd === "prefix") {
+        if(!message.member.hasPermission("MANAGE_GUILD")) return message.reply("You don't have enough permission for this command.");
+
+        if(!args[0]) return message.reply("Please specify a prefix character.");
+
+        prefixes[message.guild.id] = args[0];
+
+        fs.writeFile("prefixes.json", JSON.stringify(prefixes), err => {
+            if(err)    console.log(err);
+            else    message.channel.send(`Prefix is now "${args[0]}".`);
+        });
+    }
+
     if(cmd === "subscribe") {
+        if(!message.member.hasPermission("MANAGE_GUILD")) return message.reply("You don't have enough permission for this command.");
+
         if(args[0]) {
             const chId = args[0].replace(/[<>#]/g, '');
             const channel = message.guild.channels.cache.get(chId);
@@ -172,6 +196,8 @@ client.on("message", async message => {
     }
 
     if(cmd === "unsubscribe") {
+        if(!message.member.hasPermission("MANAGE_GUILD")) return message.reply("You don't have enough permission for this command.");
+
         if(args[0]) {
             const chId = args[0].replace(/[<>#]/g, '');
             const channel = message.guild.channels.cache.get(chId);
