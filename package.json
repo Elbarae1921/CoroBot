@@ -4,6 +4,7 @@
   "description": "",
   "main": "bot.js",
   "scripts": {
+    "preinstall": "export ACCEPT_HIGHCHARTS_LICENSE=1",
     "start": "node bot.js"
   },
   "author": "",
