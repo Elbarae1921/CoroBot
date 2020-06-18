@@ -1,7 +1,8 @@
 # CoroStats
 My first discord bot
 
-Basically a bot that fetches covid-19 stats from the worldometers.com/coronavirus website.
+Basically a bot that fetches covid-19 stats from [this](http://api19covid.herokuapp.com) API.
+[here's](https://github.com/Elbarae1921/covid19api) the API's github repo.
 
 
 
