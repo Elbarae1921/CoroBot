@@ -1,9 +1,8 @@
 const { Client, MessageEmbed, Permissions, MessageAttachment } = require('discord.js');
-const getGraph = require("./getGraph");
 const { config } = require("dotenv");
 const fs = require('fs');
 
-const { countriesArray, getData, getCountryData, getOldData, getNewCasesArray, mapCountriesData } = require("./fetchData");
+const { countriesArray, getData, getCountryData, getOldData, getCasesGraph, getDeathsGraph, getNewCasesArray, mapCountriesData } = require("./fetchData");
 
 const client = new Client({
     disableEveryone: true
@@ -323,14 +322,17 @@ client.on("message", async message => {
             }
         }
         else if(args[0] === "chart") {
-
-            const old = await message.channel.send("Creating the chart...");
+            const old = await message.channel.send("Getting the charts...");
             try {
-                await getGraph(old, message.channel, MessageAttachment);
-            } 
+                const casesChartBuffer = await getCasesGraph();
+                const deathsChartBuffer = await getDeathsGraph();
+                old.delete();
+                message.channel.send("", new MessageAttachment(casesChartBuffer, "total_cases_chart.png"));
+                message.channel.send("", new MessageAttachment(deathsChartBuffer, "total_deaths_chart.png"));
+            }
             catch (error) {
                 console.log("Error during chart creation : ", error);
-                if(old.deletable) old.delete();
+                old.delete();
                 message.channel.send("There has been an error, please try again later.");
             }
         }
@@ -340,7 +342,7 @@ client.on("message", async message => {
                 .setTitle("Coronavirus command")
                 .setTimestamp()
                 .setFooter(client.user.username, client.user.displayAvatarURL)
-                .addFields([{ name: "?corona", value: "shows help on how to use the command" }, { name: "?corona whatis", value: "what is coronavirus?" }, { name: "?corona symptoms", value: "a list of possible symptoms" }, { name: "?corona prevent", value: "how to prevent the covid-19" }, { name: "?corona cure", value: "news about the covid-19 cure" }, { name: "?corona stats", value: "covid-19 statistics (cases/deaths/recoveries) worldwide" }, { name: "?corona stats [country]", value: "detailed statistics on the covid-19 spreading in the given country" }, { name: "?corona api", value: "Get url of the api used by the bot" }]);
+                .addFields([{ name: "?corona", value: "shows help on how to use the command" }, { name: "?corona whatis", value: "what is coronavirus?" }, { name: "?corona symptoms", value: "a list of possible symptoms" }, { name: "?corona prevent", value: "how to prevent the covid-19" }, { name: "?corona cure", value: "news about the covid-19 cure" }, { name: "?corona stats", value: "covid-19 statistics (cases/deaths/recoveries) worldwide" }, { name: "?corona stats [country]", value: "detailed statistics on the covid-19 spreading in the given country" }, { name: "?corona chart", value: "two images containing two charts; one for cases, the other for deaths" }, { name: "?corona api", value: "Get url of the api used by the bot" }]);
             message.channel.send(reply);
         }
 

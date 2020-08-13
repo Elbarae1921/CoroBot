@@ -1,4 +1,5 @@
 const axios = require('axios');
+const http = require('http');
 const API = 'https://api19covid.herokuapp.com';
 
 
@@ -29,7 +30,7 @@ const getData = async () => {
 
 const getCountryData = async country => {
     try {
-        const res = await axios.get(`${API}/${country}`);
+        const res = await axios.get(`${API}/country/${country}`);
         return res.data;
     } 
     catch (error) {
@@ -73,10 +74,48 @@ const getNewCasesArray = async oldData => {
     });
 }
 
+const getCasesGraph = async () => {
+    return new Promise((resolve) => {
+        http.get('http://api19covid.herokuapp.com/chart_cases', (res) => {
+
+            const bufferArray = [];
+
+            res.on('data', chunk => {
+                bufferArray.push(Buffer.from(chunk));
+            });
+
+            res.on('end', () => {
+                const binaryData = Buffer.concat(bufferArray);
+                resolve(binaryData);
+            })
+        })
+    })
+}
+
+const getDeathsGraph = async () => {
+    return new Promise((resolve) => {
+        http.get('http://api19covid.herokuapp.com/chart_deaths', (res) => {
+
+            const bufferArray = [];
+
+            res.on('data', chunk => {
+                bufferArray.push(Buffer.from(chunk));
+            });
+
+            res.on('end', () => {
+                const binaryData = Buffer.concat(bufferArray);
+                resolve(binaryData);
+            })
+        })
+    })
+}
+
 module.exports = {
     countriesArray,
     getData,
     getCountryData,
     getNewCasesArray,
-    mapCountriesData
+    mapCountriesData,
+    getCasesGraph,
+    getDeathsGraph
 }
