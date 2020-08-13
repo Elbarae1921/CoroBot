@@ -1,7 +1,9 @@
 # CoroStats
 My first discord bot
 
-Basically a bot that fetches covid-19 stats from the worldometers.com/coronavirus website.
+Basically a bot that fetches covid-19 stats from [this](http://api19covid.herokuapp.com) API.
+
+[here's](https://github.com/Elbarae1921/covid19api) the API's github repo.
 
 
 
@@ -12,10 +14,6 @@ Returns an embedded message with covid-19 stats in the provided country<pre>?cor
 
 <br/><br/>
 
-
-The bot might stop functionning correctly if the website got redesigned, it already did many times, but it doesn't take much to get it back up and running.
-
-Definitely not the best bot out there for this kind of thing, but it gets the job done :)
 
 <h2>How to run the bot?</h2>
 
